@@ -6,7 +6,7 @@ random.shuffle(char_list)
 shuffled = ''.join(char_list)
 final_word = word[0] + shuffled + word[-1]
 print(final_word)
- 
+
 print("All combinations: ")
 unique_words = set()
 
