@@ -1,4 +1,5 @@
 import sys
+import re
 from Utils.Util import Util
 from uuid import uuid4
 from models.SavingAccount import SavingAccount
@@ -32,7 +33,19 @@ while(not not_valid):
         address.set_line_2(str(input("Address Line 2: ")))
         address.set_city(str(input("City: ")))
         address.set_state(str(input("State: ")))
-        address.set_pincode(str(input("Pincode: ")))
+        pincode = input("Pincode: ")
+        while(True):
+            if not pincode.isdigit(): 
+                print ("Enter only digits\n")
+                pincode = input("Pincode: ")
+                continue
+            elif len(pincode) != 6:
+                print ("Enter 6 digits\n")
+                pincode = input("Pincode: ")
+                continue
+            else: 
+                break
+        address.set_pincode(pincode)
         address.set_address_id()
         new_account = None
         account_type_str = None
@@ -89,8 +102,8 @@ while(not not_valid):
                 print(user_account)
                 logged_in = True
             else:
-                print("Username or Password is incorrect. Please try again...")
-        print("Welcome "+user.get_first_name()+" "+user.get_last_name() + "!")
+                print("\nUsername or Password is incorrect. Please try again...")
+        print("\n\nWelcome "+user.get_first_name()+" "+user.get_last_name() + "!")
         
         while(logged_in):
             print("\n\nEnter: ")
@@ -109,7 +122,19 @@ while(not not_valid):
                 address.set_line_2(str(input("Address Line 2: ")))
                 address.set_city(str(input("City: ")))
                 address.set_state(str(input("State: ")))
-                address.set_pincode(str(input("Pincode: ")))
+                pincode = input("Pincode: ")
+                while(True):
+                    if not pincode.isdigit(): 
+                        print ("Enter only digits\n")
+                        pincode = input("Pincode: ")
+                        continue
+                    elif len(pincode) != 6:
+                        print ("Enter 6 digits\n")
+                        pincode = input("Pincode: ")
+                        continue
+                    else: 
+                        break
+                address.set_pincode(pincode)
                 address.set_address_id(user.get_address())
                 Util.update(address)
                 print("\n\nYour Address has been changed Successfully")
@@ -122,18 +147,18 @@ while(not not_valid):
             elif(choice == 4):
                 user_account.printStatement()
             elif(choice == 5):
-                to_account = input("Enter Recipient Account No: ")
+                to_account = input("\nEnter Recipient Account No: ")
                 money = input("Enter Money to be Transferred : ")
                 print(str(money)+" has been transferred to "+str(to_account))
             elif(choice == 6):
-                print("Are you sure you want to close your account ?")
+                print("\n\nAre you sure you want to close your account ?")
                 print("Enter :")
                 print("1 for Yes")
                 print("2 for No")
                 sure = int(input(" : "))
                 if(sure == 1):
                     user_account.close();
-                    print("Thank You for Banking with us.")
+                    print("\nThank You for Banking with us.")
                     print("Your remaining account balance " + str(user_account.get_balance()) + " will be sent to you through cheque on your address.")
                     print(user.get_address())
                     logged_in = False
@@ -145,7 +170,7 @@ while(not not_valid):
                     logged_in = False
                     print("Successfully Logged Out.")
             else:
-                print("Wrong Choice. Please choose proper option.\n\n")
+                print("\nWrong Choice. Please choose proper option.\n\n")
         
     elif(x == 3):
         print("\n\nPlease Login to Continue: ")
@@ -156,24 +181,23 @@ while(not not_valid):
             if(Util.checkAdminCredentials(user_id, password)):
                 logged_in = True
             else:
-                print("Username or Password is incorrect. Please try again...")
-        print("Welcome Mr.Nadeem")
-        print("Enter: ")
+                print("\nUsername or Password is incorrect. Please try again...")
+        print("\n\nEnter: ")
         print("1 to Print Closed Account History")
         print("2 for Logout")
         choice = int(input(" : "))
         if(choice == 1):
-            print("ALl Details are as follows")
+            print("\n\nALl Details are as follows")
             AdminUtil.printClosedAccounts()
         elif(choice == 2):
-            print("Successfully Logged out")
+            print("\n\nSuccessfully Logged out")
         else:
-            print("Invalid Choice.")
+            print("\n\nInvalid Choice.")
         
         
     elif(x == 4):
-        print("Thank You for Choosing Us.")
+        print("\n\nThank You for Choosing Us.")
         print("Bye!")
         not_valid = True
     else:
-        print("Invalid Choice. Please Re-enter.")
+        print("\n\nInvalid Choice. Please Re-enter.")
