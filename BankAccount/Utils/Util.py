@@ -1,8 +1,8 @@
 from models.Address import Address
-from models.CurrentAccount import CurrentAccount
 from models.Customer import Customer
-from models.SavingAccount import SavingAccount
 import mysql.connector as connector
+from models.CurrentAccount import CurrentAccount
+from models.SavingAccount import SavingAccount
 
 
 class Util:
@@ -107,7 +107,7 @@ class Util:
                                    database='python_bank_project')
         cursor = db.cursor()
         args = (user_id, password)
-        cursor.execute("Select first_name, last_name, address_id from customer where cust_id = %s and password = %s", args)
+        cursor.execute("Select first_name, last_name, address_id from customer where cust_id = %s and password = %s ", args)
         results = cursor.fetchall();
         if len(results) > 0:
             user = Customer();
@@ -116,6 +116,22 @@ class Util:
             user.set_address(results[0][2])
         db.close()
         return user
+    
+    @staticmethod  
+    def checkAdminCredentials(user_id, password):
+        login = False
+        db = connector.connect(user='root',
+                                   password='3464',
+                                   host='127.0.0.1',
+                                   database='python_bank_project')
+        cursor = db.cursor()
+        args = (user_id, password)
+        cursor.execute("Select user_id from admin where user_id = %s and password = %s ", args)
+        results = cursor.fetchall();
+        if len(results) > 0:
+            login = True
+        db.close()
+        return login
     
     @staticmethod
     def update(obj):
@@ -134,3 +150,28 @@ class Util:
                             WHERE id = %s""", args)
             db.commit()
             db.close()
+            
+    @staticmethod  
+    def get_db_account(account_id):
+        user_account = None
+        db = connector.connect(user='root',
+                                   password='3464',
+                                   host='127.0.0.1',
+                                   database='python_bank_project')
+        cursor = db.cursor()
+        args = (account_id,)
+        cursor.execute("Select account_type, balance, no_of_withdrawal, opening_date from account where account_no = %s ", args)
+        results = cursor.fetchall();
+        if len(results) > 0:
+            if(results[0][0] == "Saving"):
+                user_account = SavingAccount()
+                user_account.set_no_of_withdraw(results[0][2])
+            else:
+                user_account = CurrentAccount()
+            user_account.set_cust_id(account_id)
+            user_account.set_balance(results[0][1])
+            user_account.set_opening_date(results[0][3])
+ 
+        db.close()
+        return user_account
+    

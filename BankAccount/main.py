@@ -5,6 +5,7 @@ from models.SavingAccount import SavingAccount
 from models.Address import Address
 from models.Customer import Customer
 from models.CurrentAccount import CurrentAccount
+from Utils.AdminUtil import AdminUtil
 
 def checkCredentials(user_id, password):
     if(user_id == password):
@@ -84,13 +85,15 @@ while(not not_valid):
             user = Util.checkCredentials(user_id, password)
             if(user != None):
                 user.set_cust_id(user_id)
+                user_account = Util.get_db_account(user_id)
+                print(user_account)
                 logged_in = True
             else:
                 print("Username or Password is incorrect. Please try again...")
-        print("Welcome "+user.get_first_name()+" "+user.get_last_name())
+        print("Welcome "+user.get_first_name()+" "+user.get_last_name() + "!")
         
         while(logged_in):
-            print("Enter: ")
+            print("\n\nEnter: ")
             print("1 for Address Change")
             print("2 for Money Deposit")
             print("3 for Money Withdrawal")
@@ -109,15 +112,15 @@ while(not not_valid):
                 address.set_pincode(str(input("Pincode: ")))
                 address.set_address_id(user.get_address())
                 Util.update(address)
-                print("Your Address has been changed Successfully")
+                print("\n\nYour Address has been changed Successfully")
             elif(choice == 2):
                 money = float(input("\n\nEnter amount: "))
-                print(str(money)+" deposited to your account")
+                user_account.deposit(money)
             elif(choice == 3):
-                money = float(input("Enter amount: "))
-                print(str(money)+" withdrawn from your account")
+                money = float(input("\n\nEnter amount: "))
+                user_account.withdraw(money)
             elif(choice == 4):
-                print("Your Statement")
+                user_account.printStatement()
             elif(choice == 5):
                 to_account = input("Enter Recipient Account No: ")
                 money = input("Enter Money to be Transferred : ")
@@ -129,13 +132,20 @@ while(not not_valid):
                 print("2 for No")
                 sure = int(input(" : "))
                 if(sure == 1):
+                    user_account.close();
                     print("Thank You for Banking with us.")
-                    print("Your remaining account balance will be sent to you through cheque on your address")
+                    print("Your remaining account balance " + str(user_account.get_balance()) + " will be sent to you through cheque on your address.")
+                    print(user.get_address())
+                    logged_in = False
                 else:
                     sys.exit() 
             elif(choice == 7):
+                    user = None
+                    user_account = None
                     logged_in = False
                     print("Successfully Logged Out.")
+            else:
+                print("Wrong Choice. Please choose proper option.\n\n")
         
     elif(x == 3):
         print("\n\nPlease Login to Continue: ")
@@ -143,7 +153,7 @@ while(not not_valid):
         while(not logged_in):
             user_id = input("Username: ")
             password = input("Password: ")
-            if(checkCredentials(user_id, password)):
+            if(Util.checkAdminCredentials(user_id, password)):
                 logged_in = True
             else:
                 print("Username or Password is incorrect. Please try again...")
@@ -154,6 +164,7 @@ while(not not_valid):
         choice = int(input(" : "))
         if(choice == 1):
             print("ALl Details are as follows")
+            AdminUtil.printClosedAccounts()
         elif(choice == 2):
             print("Successfully Logged out")
         else:

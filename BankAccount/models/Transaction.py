@@ -1,3 +1,5 @@
+import mysql.connector as connector
+import uuid
 class Transaction:
     
     def __init__(self, transaction_id = 1, transaction_type_id = 1, balance = 0.0
@@ -7,6 +9,51 @@ class Transaction:
         self.balance = balance
         self.withdrawals = withdrawals
         self.deposits = deposits
+
+    @staticmethod
+    def create(obj, money, tran_type, add = None):
+        if(tran_type == "Withdraw"):
+            db = connector.connect(user='root',
+                                   password='3464',
+                                   host='127.0.0.1',
+                                   database='python_bank_project')
+            cursor = db.cursor()
+            args = (str(uuid.uuid4()), obj.get_cust_id(), "Withdrawal", obj.get_balance(), money, obj.get_balance() - money)
+            cursor.execute("Insert into transaction(transaction_id, cust_id, transaction_type, initial_balance, withdrawals, balance ) values(%s, %s, %s, %s, %s, %s)", args)
+            db.commit()
+            db.close()
+        elif(tran_type == "Deposit"):
+            db = connector.connect(user='root',
+                                   password='3464',
+                                   host='127.0.0.1',
+                                   database='python_bank_project')
+            cursor = db.cursor()
+            args = (str(uuid.uuid4()), obj.get_cust_id(), "Deposit", obj.get_balance(), money, obj.get_balance() + money)
+            cursor.execute("Insert into transaction(transaction_id, cust_id, transaction_type, initial_balance, deposits, balance ) values(%s, %s, %s, %s, %s, %s)", args)
+            db.commit()
+            db.close()
+            
+        elif(tran_type == "Transfer"):
+            if(add == True):
+                db = connector.connect(user='root',
+                                   password='3464',
+                                   host='127.0.0.1',
+                                   database='python_bank_project')
+                cursor = db.cursor()
+                args = (str(uuid.uuid4()), obj.get_cust_id(), "Transfer", obj.get_balance(), money, obj.get_balance() + money)
+                cursor.execute("Insert into transaction(transaction_id, cust_id, transaction_type, initial_balance, deposits, balance ) values(%s, %s, %s, %s, %s, %s)", args)
+                db.commit()
+                db.close()
+            elif(add == False):
+                db = connector.connect(user='root',
+                                   password='3464',
+                                   host='127.0.0.1',
+                                   database='python_bank_project')
+                cursor = db.cursor()
+                args = (str(uuid.uuid4()), obj.get_cust_id(), "Deposit", obj.get_balance(), money, obj.get_balance() + money)
+                cursor.execute("Insert into transaction(transaction_id, cust_id, transaction_type, initial_balance, withdrawals, balance ) values(%s, %s, %s, %s, %s, %s)", args)
+                db.commit()
+                db.close()
 
     def get_transaction_id(self):
         return self.__transaction_id
