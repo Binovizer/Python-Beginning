@@ -1,5 +1,4 @@
 import sys
-import re
 from Utils.Util import Util
 from uuid import uuid4
 from models.SavingAccount import SavingAccount
@@ -7,11 +6,6 @@ from models.Address import Address
 from models.Customer import Customer
 from models.CurrentAccount import CurrentAccount
 from Utils.AdminUtil import AdminUtil
-
-def checkCredentials(user_id, password):
-    if(user_id == password):
-        return True
-    return False
 
 print("Hello!!")
 print("Welcome to the Bank Account Project.")
@@ -96,13 +90,16 @@ while(not not_valid):
             user_id = input("Username: ")
             password = input("Password: ")
             user = Util.checkCredentials(user_id, password)
-            if(user != None):
+            if(user != None and user != False):
                 user.set_cust_id(user_id)
                 user_account = Util.get_db_account(user_id)
                 print(user_account)
                 logged_in = True
+            elif(user == False):
+                print("\nPlease contact your bank admin.")
             else:
                 print("\nUsername or Password is incorrect. Please try again...")
+        
         print("\n\nWelcome "+user.get_first_name()+" "+user.get_last_name() + "!")
         
         while(logged_in):
