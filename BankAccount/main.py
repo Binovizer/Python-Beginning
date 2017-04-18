@@ -90,13 +90,11 @@ while(not not_valid):
             user_id = input("Username: ")
             password = input("Password: ")
             user = Util.checkCredentials(user_id, password)
-            if(user != None and user != False):
+            if(user != None):
                 user.set_cust_id(user_id)
                 user_account = Util.get_db_account(user_id)
                 print(user_account)
                 logged_in = True
-            elif(user == False):
-                print("\nPlease contact your bank admin.")
             else:
                 print("\nUsername or Password is incorrect. Please try again...")
         

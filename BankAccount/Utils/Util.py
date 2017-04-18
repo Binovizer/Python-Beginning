@@ -107,17 +107,13 @@ class Util:
                                    database='python_bank_project')
         cursor = db.cursor()
         args = (user_id, password)
-        cursor.execute("Select customer.first_name, customer.last_name, customer.address_id, account.status from customer, account where customer.cust_id = %s and customer.password = %s ", args)
+        cursor.execute("Select first_name, last_name, address_id from customer where cust_id = %s and password = %s ", args)
         results = cursor.fetchall();
         if len(results) > 0:
-            if(results[0][3] == "C"):
-                print("\n\nYour account is Closed.")
-                user = False
-            else:
-                user = Customer();
-                user.set_first_name(results[0][0])
-                user.set_last_name(results[0][1])
-                user.set_address(results[0][2])
+            user = Customer();
+            user.set_first_name(results[0][0])
+            user.set_last_name(results[0][1])
+            user.set_address(results[0][2])
         db.close()
         return user
     
