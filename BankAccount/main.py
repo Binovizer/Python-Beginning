@@ -62,6 +62,16 @@ def printCustomerSubMenu():
     print("6 for Account Closure")
     print("7 for Customer Logout",end="")    
 
+def validatePassword(password, input_msg):
+    while(True):
+        if len(password) < 8:
+            print ("Password Must be min 8 characters long.\n")
+            password = input(input_msg)
+            continue
+        else:
+            return password
+
+
 print("Hello!!")
 print("Welcome to the Swiss Bank!!!")
 not_valid = False
@@ -104,13 +114,12 @@ while(not not_valid):
 
         new_user = Customer(fname, lname,address)
         print("Please Enter Your Password")
-        password = input(" : ")
-        re_password = input("Re-enter: ")
+        password = validatePassword(input("Password: "), "Password: ")
+        re_password = validatePassword(input("Re-Password: "), "Re-Password: ")
         while(password != re_password):
-            print("Please enter the same password")
-            print("Please Enter Your Password")
-            password = input(" : ")
-            re_password = input("Re-enter: ")
+            print("Please enter the same password.")
+            password = validatePassword(input("Password: "), "Password: ")
+            re_password = validatePassword(input("Re-Password: "), "Re-Password: ")
         
         new_user.set_password(password)
         cust_id = Util.save(new_user)
@@ -128,7 +137,7 @@ while(not not_valid):
         logged_in = False
         while(not logged_in):
             user_id = input("Customer Id: ")
-            password = input("Password: ")
+            password = validatePassword(input("Password : "), "Password: ")
             user = Util.checkCredentials(user_id, password)
             if(user != None):
                 user.set_cust_id(user_id)

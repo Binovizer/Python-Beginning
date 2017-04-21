@@ -121,7 +121,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'nadeem','Mohd','Nadeem',2),(2,'harshi','Harshi','Garg',3),(3,'nupur','Nupur','Garg',4);
+INSERT INTO `customer` VALUES (1,'nadeem_khan','Mohd','Nadeem',2),(2,'harshi_garg','Harshi','Garg',3),(3,'nupur_garg','Nupur','Garg',4);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,4 +168,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-22  1:25:49
+-- Dump completed on 2017-04-22  1:38:31
