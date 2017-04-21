@@ -4,6 +4,7 @@ from models.Address import Address
 from models.Customer import Customer
 from models.CurrentAccount import CurrentAccount
 from Utils.AdminUtil import AdminUtil
+import sys
 
 def printMainMenu():
     print("\n\nEnter: ")
@@ -135,8 +136,9 @@ while(not not_valid):
     elif(x == 2):
         print("\n\nPlease Login to Continue: ")
         logged_in = False
+        count = 0
         while(not logged_in):
-            user_id = input("Customer Id: ")
+            user_id = input("\n\nCustomer Id: ")
             password = validatePassword(input("Password : "), "Password: ")
             user = Util.checkCredentials(user_id, password)
             if(user != None):
@@ -145,7 +147,15 @@ while(not not_valid):
                 print(user_account)
                 logged_in = True
             else:
-                print("\nCustomer Id or Password is incorrect. Please try again...")
+                count += 1
+                if(count == 3):
+                    user_account = Util.get_db_account(user_id)
+                    user_account.close()
+                    print("\n\nWe are closing your account because of suspicious account activity. Please contact your bank admin for further details.")
+                    sys.exit()
+                else:
+                    print("\nCustomer Id or Password is incorrect")
+                    print("Attempts Left: ", 3 - count)
         
         print("\n\nWelcome " + user.get_first_name() + " " + user.get_last_name() + "!")
         
