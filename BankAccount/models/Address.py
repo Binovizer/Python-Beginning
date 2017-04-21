@@ -94,5 +94,6 @@ class Address:
     
     def __str__(self):
         return "Address Line 1: "+self.get_line_1()+" \nAddress Line 2: "+self.get_line_2()+" \nCity: "+self.get_city()+" \nState: "+self.get_state()+" \nPincode: "+self.get_pincode()
+    
     address_id = property(get_address_id, set_address_id, del_address_id, "address_id's docstring")
     

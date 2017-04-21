@@ -1,5 +1,5 @@
 import mysql.connector as connector
-import uuid
+from datetime import datetime
 class Transaction:
     
     def __init__(self, transaction_id = 1, transaction_type_id = 1, balance = 0.0
@@ -11,25 +11,27 @@ class Transaction:
         self.deposits = deposits
 
     @staticmethod
-    def create(obj, money, tran_type, add = None):
+    def create(obj, money, tran_type, add = None, account_id = None):
+        now = datetime.today()
         if(tran_type == "Withdraw"):
             db = connector.connect(user='root',
                                    password='3464',
                                    host='127.0.0.1',
                                    database='python_bank_project')
             cursor = db.cursor()
-            args = (str(uuid.uuid4()), obj.get_cust_id(), "Withdrawal", obj.get_balance(), money, obj.get_balance() - money)
-            cursor.execute("Insert into transaction(transaction_id, cust_id, transaction_type, initial_balance, withdrawals, balance ) values(%s, %s, %s, %s, %s, %s)", args)
+            args = (obj.get_cust_id(), "Withdrawal", obj.get_balance(), money, obj.get_balance() - money, now.strftime('%Y-%m-%d %H:%M:%S'))
+            cursor.execute("Insert into transaction(cust_id, transaction_type, initial_balance, withdrawals, balance, time_of_transaction ) values(%s, %s, %s, %s, %s, %s)", args)
             db.commit()
             db.close()
+            
         elif(tran_type == "Deposit"):
             db = connector.connect(user='root',
                                    password='3464',
                                    host='127.0.0.1',
                                    database='python_bank_project')
             cursor = db.cursor()
-            args = (str(uuid.uuid4()), obj.get_cust_id(), "Deposit", obj.get_balance(), money, obj.get_balance() + money)
-            cursor.execute("Insert into transaction(transaction_id, cust_id, transaction_type, initial_balance, deposits, balance ) values(%s, %s, %s, %s, %s, %s)", args)
+            args = (obj.get_cust_id(), "Deposit", obj.get_balance(), money, obj.get_balance() + money, now.strftime('%Y-%m-%d %H:%M:%S'))
+            cursor.execute("Insert into transaction(cust_id, transaction_type, initial_balance, deposits, balance, time_of_transaction ) values(%s, %s, %s, %s, %s, %s)", args)
             db.commit()
             db.close()
             
@@ -40,18 +42,19 @@ class Transaction:
                                    host='127.0.0.1',
                                    database='python_bank_project')
                 cursor = db.cursor()
-                args = (str(uuid.uuid4()), obj.get_cust_id(), "Transfer", obj.get_balance(), money, obj.get_balance() + money)
-                cursor.execute("Insert into transaction(transaction_id, cust_id, transaction_type, initial_balance, deposits, balance ) values(%s, %s, %s, %s, %s, %s)", args)
+                args = (obj.get_cust_id(), "Transfer-D", obj.get_balance(), money, obj.get_balance() + money, now.strftime('%Y-%m-%d %H:%M:%S'), str(account_id))
+                cursor.execute("Insert into transaction(cust_id, transaction_type, initial_balance, deposits, balance, time_of_transaction, from_account ) values(%s, %s, %s, %s, %s, %s, %s)", args)
                 db.commit()
                 db.close()
+                
             elif(add == False):
                 db = connector.connect(user='root',
                                    password='3464',
                                    host='127.0.0.1',
                                    database='python_bank_project')
                 cursor = db.cursor()
-                args = (str(uuid.uuid4()), obj.get_cust_id(), "Deposit", obj.get_balance(), money, obj.get_balance() + money)
-                cursor.execute("Insert into transaction(transaction_id, cust_id, transaction_type, initial_balance, withdrawals, balance ) values(%s, %s, %s, %s, %s, %s)", args)
+                args = (obj.get_cust_id(), "Transfer-W", obj.get_balance(), money, obj.get_balance() - money, now.strftime('%Y-%m-%d %H:%M:%S'), str(account_id))
+                cursor.execute("Insert into transaction(cust_id, transaction_type, initial_balance, withdrawals, balance, time_of_transaction, to_account ) values(%s, %s, %s, %s, %s, %s, %s)", args)
                 db.commit()
                 db.close()
 

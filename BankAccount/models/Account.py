@@ -68,23 +68,26 @@ class Account:
                                database='python_bank_project')
         cursor = db.cursor()
         args = (self.get_cust_id(),)
-        cursor.execute("SELECT transaction_id, transaction_type, initial_balance, deposits, withdrawals, balance from transaction WHERE cust_id = %s ", args)
+        cursor.execute("SELECT transaction_id, transaction_type, initial_balance, deposits, withdrawals, balance, time_of_transaction, from_account, to_account from transaction WHERE cust_id = %s ORDER BY time_of_transaction", args)
         results = cursor.fetchall()
         if(len(results) > 0):
             print("\n\nYour Statement : \n")
-            print('{0:37}  {1:>16}  {2:>16}  {3:>12}  {4:>13}  {5:>15}'.format("Transaction Id", "Transaction Type", "Initial Balance", "Deposits", "Withdrawals", "Balance"))
+            print('{0:>3}   {1:10}   {2:>16}   {3:>12}   {4:>14}   {5:>12}    {6:19}   {7:10}   {8:10}'.format("Id", "Type", "Initial Balance", "Deposits", "Withdrawals", "Balance", "Time", "Sender", "Recipient"))
             print()
             for row in results:
                 formatted_str = None
                 if(row[1] == "Deposit"):
-                    formatted_str = '{0:37}  {1:16}  {2:16.2f}  {3:12.2f}  {4:13.2f}  {5:15.2f} '.format(row[0], row[1], float(row[2]), float(row[3]), 0.0, float(row[5]));
+                    formatted_str = '{0:3}   {1:10}   {2:16.2f}   {3:12.2f}   {4:14.2f}   {5:12.2f}    {6:19}   {7:10}   {8:10}'.format(row[0], row[1], float(row[2]), float(row[3]), 0.0, float(row[5]), str(row[6]), "-", "-");                    
+                elif(row[1] == "Transfer-D"):
+                    formatted_str = '{0:3}   {1:10}   {2:16.2f}   {3:12.2f}   {4:14.2f}   {5:12.2f}    {6:19}   {7:10}   {8:10}'.format(row[0], row[1], float(row[2]), float(row[3]), 0.0, float(row[5]), str(row[6]), str(row[7]), "-");
                 elif(row[1] == "Withdrawal"):
-                    formatted_str = '{0:37}  {1:16}  {2:16.2f}  {3:12.2f}  {4:13.2f}  {5:15.2f} '.format(row[0], row[1], float(row[2]), 0.0 , float(row[4]), float(row[5]));
+                    formatted_str = '{0:3}   {1:10}   {2:16.2f}   {3:12.2f}   {4:14.2f}   {5:12.2f}    {6:19}   {7:10}   {8:10}'.format(row[0], row[1], float(row[2]), 0.0 , float(row[4]), float(row[5]), str(row[6]), "-", "-");
+                elif(row[1] == "Transfer-W"):
+                    formatted_str = '{0:3}   {1:10}   {2:16.2f}   {3:12.2f}   {4:14.2f}   {5:12.2f}    {6:19}   {7:10}   {8:10}'.format(row[0], row[1], float(row[2]), 0.0 , float(row[4]), float(row[5]), str(row[6]), "-", str(row[8]));
                 
                 print(formatted_str)
-                print()
         db.close()
-    
+
 
     def get_cust_id(self):
         return self.__cust_id
