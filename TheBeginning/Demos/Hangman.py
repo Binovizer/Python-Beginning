@@ -19,9 +19,12 @@ print("Lets Play Hangman...")
 guess_count = 7
 try:
     guess_count = int(input("How many guesses you want for your game: "))
+    if(guess_count >= 10):
+        print("na munna na...10 se jada guesses nahi milege...")
+        guess_count = 10
     print("You have %d guesses." %guess_count)
 except Exception:
-    print("Abe no dalna tha chutiye.")
+    print("Abe no dalna tha dhakkan.")
     print("Le ab %d se kam chala : "%guess_count)
     print()
 
@@ -38,7 +41,7 @@ while(guess_count > 0 and '-' in coded_word_list):
     while len(guess) != 1:
         count += 1
         if(count > 2):
-            print("Abe chutiye samajh ni aata kya ek dal ek.")
+            print("Abe dhakkan samajh ni aata kya ek dal ek.")
             guess = input('dal ab :').lower()
         else:
             guess = input('Please Enter one character at a time :').lower()
